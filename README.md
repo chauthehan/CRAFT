@@ -20,6 +20,7 @@ Với phương pháp weakly-supervised learning, chúng ta phải train với c�
 
 
 pixel-wise confidence map Sc được tính như sau:
+
 ![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/formula2.png)
 
 với p là pixel ở trong vùng R(w). Hàm loss được tính:
