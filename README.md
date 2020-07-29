@@ -4,7 +4,7 @@ Text detection
 Hiểu về craft:
 paper: https://arxiv.org/pdf/1904.01941.pdf
 
-Về dữ liệu:
+# Về dữ liệu:
 - Synthetic image với nhãn cấp độ ký tự. Chúng ta sẽ tạo heat map để biểu diễn ground truth label là region score (tỉ lệ 1 pixel có là tâm của một ký tự không) và affinity score (Tỷ lệ một ảnh là tâm của 2 ký tự liền kề). Có 3 bước để tạo heatmap: 1) Chuẩn bị 2-dimensional isotropic Gausian map; 2) Tính toán ma trận perspective transform giữa Gaussian map và mỗi box ký tự; 3) Dùng ma trận tìm được để chuyển Gaussian map về hình dạng của box ký tự. Đối với affinity score, ta sẽ vẽ các đường chéo nối các đỉnh đối diện nhau của box ký tự, tạo ra 2 tam giác upper và lower. Và một affinity box sẽ được tạo ra có đỉnh là là tâm của 4 cái tam giác của 2 box ký tự liền kề.
 ![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/generate.png)
 
@@ -19,10 +19,40 @@ Với phương pháp weakly-supervised learning, chúng ta phải train với c�
 ![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/formula1.png)
 
 
+pixel-wise confidence map Sc được tính như sau:
+![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/formula2.png)
+
+với p là pixel ở trong vùng R(w). Hàm loss được tính:
+
+![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/loss.png)
+
+với S*r(p) và S*a(p) là pseudo-ground truth region score và affinity map, Sr(p) và Sa(p) là region score dự đoán và affinity score. Khi train với synthetic data, thì nhãn cho các ký tự sẽ chính xác, vì thế nên Sc(p) sẽ bằng 1.
 
 
 
-![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/generate.png)
+Trong quá trình training, craft sẽ dự đoán ký tự ngày càng chính xác, nên Sconf(w) sẽ tăng dần. 
+![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/during_training.png)
+
+Nếu mà confidence score dưới 0.5, thì bounding box dự đoán được nên được bỏ qua vì nó sẽ gây ảnh hưởng xấu tới model. Trong trường hợp này, Sconf(w) sẽ được đặt về 0.5
+
+
+# Inference 
+
+Ở bước inference, output có thể là word boxes hoặc character boxes hoặc các đa giác khác. Đầu tiên, binary map M của ảnh sẽ được khai báo toàn là 0. Với M(p) sẽ được gán cho 1 nến Sr(p) > tr hoặc Sa(p) > ta với tr là region threshold và ta là affinity threshold. Sau đó Connected Commponent labeling (CCL) sẽ được dùng (hàm connectedComponents của OpenCV) và cuối cùng là tìm ra hình chữ nhật bao quanh các vùng connected (dùng hàm minAreaRect của OpenCV) sẽ là các bounding box cho các ký tự. 
+Ta có thể kết nối các bounding box của các ký tự thành word box để giải quyết các trường hợp text box bị cong, sử dụng phương pháp trong paper. 
+
+![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/polygon_generate.png)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
