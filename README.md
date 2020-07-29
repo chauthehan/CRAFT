@@ -46,8 +46,11 @@ Ta có thể kết nối các bounding box của các ký tự thành word box �
 
 
 
+# Model
 
+Mạng Vgg-16 là backbone và các skip connection, đầu ra là region score và afinitiny score
 
+![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/network.png)
 
 
 
