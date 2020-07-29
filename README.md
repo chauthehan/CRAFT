@@ -27,7 +27,7 @@ với p là pixel ở trong vùng R(w). Hàm loss được tính:
 
 ![alt text](https://github.com/chauthehan/CRAFT/blob/master/image/loss.png)
 
-với S**r(p) và S**a(p) là pseudo-ground truth region score và affinity map, Sr(p) và Sa(p) là region score dự đoán và affinity score. Khi train với synthetic data, thì nhãn cho các ký tự sẽ chính xác, vì thế nên Sc(p) sẽ bằng 1.
+với S\*r(p) và S\*a(p) là pseudo-ground truth region score và affinity map, Sr(p) và Sa(p) là region score dự đoán và affinity score. Khi train với synthetic data, thì nhãn cho các ký tự sẽ chính xác, vì thế nên Sc(p) sẽ bằng 1.
 
 
 
